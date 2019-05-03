@@ -1,3 +1,13 @@
+/*-- определяем роль пользователя --*/
+function is_user_role( $role, $user_id = null ) {
+	$user = is_numeric( $user_id ) ? get_userdata( $user_id ) : wp_get_current_user();
+
+	if( ! $user )
+		return false;
+
+	return in_array( $role, (array) $user->roles );
+}
+
 /*-- Минимальная сумма заказа --*/
 add_action( 'woocommerce_checkout_process', 'wc_minimum_order_amount' );
 add_action( 'woocommerce_before_cart' , 'wc_minimum_order_amount' );
