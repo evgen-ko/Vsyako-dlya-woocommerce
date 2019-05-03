@@ -1,0 +1,59 @@
+/*-- Минимальная сумма заказа --*/
+add_action( 'woocommerce_checkout_process', 'wc_minimum_order_amount' );
+add_action( 'woocommerce_before_cart' , 'wc_minimum_order_amount' );
+
+function wc_minimum_order_amount() {
+    // Set this variable to specify a minimum order value
+	if( is_user_role( 'bronze_opt' ) ) {
+	  $minimum = 10000;
+	  }
+    elseif( is_user_role( 'silver_opt' ) ) {
+	  $minimum = 50000;
+  }
+    elseif( is_user_role( 'gold_opt' ) ) {
+	  $minimum = 100000;
+  }
+    else { $minimum = 2000;}
+ 
+    if ( WC()->cart->subtotal < $minimum ) {
+		
+		// отключаем кнопку оцормления заказа
+		if( is_cart() || is_checkout() ) {
+			?>
+			<script>
+            jQuery(document).ready(function ($) {
+				console.log('Тестируем-3');
+			$(".checkout-button").each(function() {
+    $(this).attr("data-oldhref", $(this).attr("href"));
+    $(this).removeAttr("href");
+	$(this).addClass('check-disabled');
+	    });
+			});
+		
+		</script>
+		
+		<?php
+ 
+            wc_add_notice( 
+                sprintf( 'Уважаемый клиент, минимальная сумму заказа, без учета доставки, для Вашего тарифного плана в нашем магазине составляет %s Текущая сумма Вашего заказа %s.' , 
+                    wc_price( $minimum ), 
+                    wc_price( WC()->cart->subtotal )
+                ), 'error' 
+            );
+ 
+        }  else {
+			
+ 
+            wc_print_notice( 
+                sprintf( 'Уважаемый Клиент, минимальная сумму заказа для Вашего тарифного плана в нашем магазине составляет %s Текущая сумма Вашего заказа %s.' , 
+                    wc_price( $minimum ), 
+                    wc_price( WC()->cart->subtotal )
+                ), 'error' 
+            );
+			
+ 
+        } 
+		
+    }
+ 
+}
