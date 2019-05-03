@@ -1,4 +1,4 @@
 /* изменяем символ валюты на понятные нам рубли ))*/
 function change_rub_symbol()
  {	return 'руб.';}add_filter( 'woocommerce_currency_symbol', 'change_rub_symbol'); 
-/*--*/
+
