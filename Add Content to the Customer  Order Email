@@ -29,3 +29,4 @@ if ( $email->id == 'failed_order' ) {}
 if ( $email->id == 'new_order' ) {}
 
 /*-- источник https://businessbloomer.com/woocommerce-add-extra-content-order-email/ --*/
+/*-*/
