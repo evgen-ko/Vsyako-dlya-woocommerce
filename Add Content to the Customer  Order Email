@@ -1,0 +1,31 @@
+
+/*-------добавление контента в адрес электронной почты для обработки заказов клиентов - WooCommerce--------------*/
+/**
+ * @snippet       Add Content to the Customer Processing Order Email - WooCommerce
+ * @how-to        Watch tutorial @ https://businessbloomer.com/?p=19055
+ * @sourcecode    https://businessbloomer.com/?p=385
+ * @author        Rodolfo Melogli
+ * @testedwith    Woo 3.5.1
+ * @donate $9     https://businessbloomer.com/bloomer-armada/
+ */
+ 
+add_action( 'woocommerce_email_before_order_table', 'bbloomer_add_content_specific_email', 20, 4 );
+ 
+function bbloomer_add_content_specific_email( $order, $sent_to_admin, $plain_text, $email ) {
+   if ( $email->id == 'customer_processing_order' ) {
+      echo '<h2 class="email-upsell-title">Get 20% off</h2><p class="email-upsell-p">Thank you for making this purchase! Come back and use the code "<strong>Back4More</strong>" to receive a 20% discount on your next purchase! Click here to continue shopping.</p>';
+   }
+}
+/*--Используя тот же фрагмент выше, вы можете настроить таргетинг на разные электронные письма, изменив идентификатор электронной почты.--*/
+if ( $email->id == 'cancelled_order' ) {}
+if ( $email->id == 'customer_completed_order' ) {}
+if ( $email->id == 'customer_invoice' ) {}
+if ( $email->id == 'customer_new_account' ) {}
+if ( $email->id == 'customer_note' ) {}
+if ( $email->id == 'customer_on_hold_order' ) {}
+if ( $email->id == 'customer_refunded_order' ) {}
+if ( $email->id == 'customer_reset_password' ) {}
+if ( $email->id == 'failed_order' ) {}
+if ( $email->id == 'new_order' ) {}
+
+/*-- источник https://businessbloomer.com/woocommerce-add-extra-content-order-email/ --*/
