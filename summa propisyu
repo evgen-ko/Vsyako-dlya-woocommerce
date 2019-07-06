@@ -1,0 +1,10 @@
+<?php
+
+$number_total = $this->order->get_total(); // форматирование номера идет здесь; 
+// используем Number Formatter class
+ $f = new NumberFormatter("ru", NumberFormatter::SPELLOUT); $total_in_words = $f->format($number_total); // Сумма всего словами
+ $order_total = $total_in_words;
+ echo $order_total;
+ 
+ // источник https://stackoverflow.com/questions/40029445/woocommerce-how-to-show-order-total-amount-in-words
+ ?>
