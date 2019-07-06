@@ -1,0 +1,11 @@
+<php
+// Это сделает трюк (подсчет позиций в корзине):
+echo '<p>Line cart items count: ' . count( WC()->cart_get_cart() ) . '</p>';
+
+
+// Для количества элементов линейного заказа это будет(для WC_Order $order object):
+echo '<p>Line order items count: ' . count( $order->get_items() ) . '</p>';
+
+
+// источник https://stackoverflow.com/questions/49409572/get-the-line-cart-items-count-in-woocommerce
+?>
