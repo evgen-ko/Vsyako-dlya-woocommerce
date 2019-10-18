@@ -1,0 +1,97 @@
+/* Меняем статус заказа наложенным платежом по умолчанию, с Обработка на На Удержании    */
+
+
+/* -----
+Этот код работает, но не овечает требованиям, письмо об обработке заказа приходит клиенту,
+а потом статус заказа меняется на На Удержании
+---- */
+
+ add_action( 'woocommerce_thankyou', 'woocommerce_thankyou_change_order_status', 10, 1 );
+function woocommerce_thankyou_change_order_status( $order_id ){
+    if( ! $order_id ) return;
+
+    $order = wc_get_order( $order_id );
+
+    if( $order->get_status() == 'processing' )
+        $order->update_status( 'on-hold' );
+}
+
+/* -----
+У меня этот код НЕ работает
+---- */
+
+add_filter( 'woocommerce_cod_process_payment_order_status', 'change_cod_payment_order_status', 10 );
+function change_cod_payment_order_status( $order_status, $order ) {
+    return 'on-hold';
+}
+
+/* ----- 
+У меня этот код Работает
+---- */
+
+add_filter( 'woocommerce_payment_gateways', 'growdev_remove_payment_gateways', 20, 1 );
+
+function growdev_remove_payment_gateways( $load_gateways ) {
+$remove_gateways = array(
+'WC_Gateway_COD'
+);
+foreach ( $load_gateways as $key => $value ) {
+if ( in_array( $value, $remove_gateways ) ) {
+unset( $load_gateways[ $key ] );
+}
+}
+return $load_gateways;
+}
+
+add_filter( 'woocommerce_payment_gateways', 'my_core_gateways',30,1 );
+
+function my_core_gateways( $methods ) {
+$methods[] = 'WC_Gateway_COD_custom';
+return $methods;
+}
+
+class WC_Gateway_COD_custom extends WC_Gateway_COD {
+
+public function process_payment( $order_id ) {
+	$order = wc_get_order( $order_id );
+
+  // Mark as on-hold
+  $order->update_status( 'on-hold', __( 'Payment to be made upon delivery.', 'woocommerce' ) );
+
+  // Reduce stock levels
+  $order->reduce_order_stock();
+
+  // Remove cart
+  WC()->cart->empty_cart();
+
+  // Return thankyou redirect
+  return array(
+      'result'    => 'success',
+      'redirect'  => $this->get_return_url( $order )
+  );
+}
+}
+
+
+/* ----- 
+У меня этот код НЕ работает
+---- */
+
+add_action( 'woocommerce_cod_process_payment_order_status', 'wc_auto_complete_cod_order', 10, 2 );
+function wc_auto_complete_cod_order( $order_status, $order ) {
+    if ( ! ( in_array( $order->get_billing_country(), ['RU'] ) || in_array( $order->get_shipping_country(), ['RU'] ) ) ) {
+        $order_status = 'on-hold';
+    }
+    return $order_status;
+}
+
+
+/* -----
+У меня этот код Работает
+---- */
+
+add_filter('woocommerce_cod_process_payment_order_status',
+  function( $status = 'processing', $order = null ) {
+    return 'on-hold';
+  }, 10, 2
+);
