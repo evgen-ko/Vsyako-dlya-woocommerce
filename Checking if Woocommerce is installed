@@ -1,0 +1,41 @@
+  // Проверяем установлен ли Woocommerce.
+if ( in_array(
+	'woocommerce/woocommerce.php',
+	apply_filters( 'active_plugins', get_option( 'active_plugins' ) ),
+	true
+) ) {
+	// Если установлен Woocommerce добавляем свой код
+} else {
+// Если не установлен Woocommerce выводим сообщение об ошибке.
+	add_action( 'admin_notices', 'dfl_not_woocommerce_notice' );
+	return false;
+}
+    
+function dfl_not_woocommerce_notice(){
+	$dfl_message = "Для работы плагина <b>\"Скачать фото по ссылке\" </b> обязательным условием является установка и активация Woocommerce ";
+	echo '<div class="notice notice-error is-dismissible"> <p>'. $dfl_message .'</p></div>';
+}
+
+
+/*-----*/
+// источник https://wp-kama.ru/hook/admin_notices
+
+// Так выглядит шаблон таких сообщений
+<div class="{class}"><p>{message}</p></div>
+
+/*
+*  {class}
+*
+*  CSS классы блока. Обязательный класс notice и к нему добавляем, в зависимости от нужд:
+*  notice-success - для успешных операций. Зеленая полоска слева.
+*  notice-error - для ошибок. Красная полоска слева.
+*  notice-warning - для предупреждений. Оранжевая полоска слева.
+*  notice-info - для информации. Синяя полоска слева.
+*  is-dismissible - добавляет иконку-кнопку "закрыть" (крестик в конце блока). Иконка добавляется через javascript. По клику на нее блок-заметка будет скрыт (удален),
+   но это состояние не сохраняется, то есть при обновлении страницы блок снова будет отображаться.
+*  class="notice notice-success is-dismissible" - пример всего набора классов.
+*
+*  {message}
+*  Текст или HTML сообщения.
+
+*/
