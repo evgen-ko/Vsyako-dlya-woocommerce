@@ -1,4 +1,6 @@
-  // Проверяем установлен ли Woocommerce.
+<?php
+
+// Проверяем установлен ли Woocommerce.
 if ( in_array(
 	'woocommerce/woocommerce.php',
 	apply_filters( 'active_plugins', get_option( 'active_plugins' ) ),
@@ -39,3 +41,4 @@ function dfl_not_woocommerce_notice(){
 *  Текст или HTML сообщения.
 
 */
+?>
