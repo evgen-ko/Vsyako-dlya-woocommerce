@@ -1,0 +1,42 @@
+// Источник https://misha.agency/woocommerce/kak-ustanovit-minimalnuyu-summu-dlya-zakaza.html
+// Добавляем уведомления на страницу Корзины и Оформления заказа
+add_action( 'woocommerce_before_cart', 'truemisha_minimum_order_amount' );
+ 
+function truemisha_minimum_order_amount(){
+ 
+	$minimum_amount = 1000;
+ 
+	if ( WC()->cart->subtotal < $minimum_amount ) {
+ 
+		wc_print_notice(
+			sprintf(
+				'Минимальная сумма заказа %s, а у вы хотите заказать всего лишь на %s.' ,
+				wc_price( $minimum_amount ),
+				wc_price( WC()->cart->subtotal )
+			),
+			'notice'
+		);
+	}
+ 
+}
+// Блокируем возможность оформления заказа с маленькой суммой
+add_action( 'woocommerce_checkout_process', 'truemisha_no_checkout_min_order_amount' );
+ 
+function truemisha_no_checkout_min_order_amount() {
+ 
+	$minimum_amount = 1000;
+ 
+	if ( WC()->cart->subtotal < $minimum_amount ) {
+ 
+		wc_add_notice( 
+			sprintf( 
+				'Минимальная сумма заказа %s, а у вы хотите заказать всего лишь на %s.',
+				wc_price( $minimum_amount ),
+				wc_price( WC()->cart->subtotal )
+			),
+			'error'
+		);
+ 
+	}
+ 
+}
